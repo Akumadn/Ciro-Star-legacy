@@ -1,0 +1,190 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class Caracteristicas : MonoBehaviour
+{
+    public int HP;
+    public int HP_Max;
+    public int Nivel;
+    public float Exp;
+    public float Exp_Max;
+
+    public int Vitalidad;
+    public int Fuerza;
+    public int Defensa;
+    public int Aguante;
+
+    public int Stats;
+    public static Caracteristicas LvStatic;
+    
+    private string viTality = "Vitality_Base";
+    private string sTrength = "Strength_Base";
+    private string sHield = "Shield_Base";
+    private string sTamina = "Stamina_Base";
+
+    //Referencia Panel de level
+    public GameObject panelLevel;
+
+    public Text HP_Texto;
+    public Text Nivel_Texto;
+    public Text Exp_Texto;
+
+    public Text Vitalidad_Text;
+    public Text Fuerza_Text;
+    public Text Defensa_Text;
+    public Text Aguante_Text;
+
+    public Text Stats_Text;
+
+    private void Awake()
+    {
+        panelLevel.SetActive(false);
+        LoadData();
+    }
+
+    private void Start()
+    {
+        Vitalidad = 50;
+        Fuerza = 15;
+        Defensa = 5;
+        Aguante = 10;
+        LvStatic = GameObject.FindObjectOfType<Caracteristicas>();
+    }
+
+
+    public void Texto_Interfaz()
+    {
+        HP_Texto.text = "" +HP+ "/" +HP_Max;
+        Nivel_Texto.text = "" +Nivel;
+        Exp_Texto.text = "" +Exp+ "/" +Exp_Max;
+
+        Vitalidad_Text.text = "" +Vitalidad;
+        Fuerza_Text.text = "" +Fuerza;
+        Defensa_Text.text = "" +Defensa;
+        Aguante_Text.text = "" +Aguante;
+
+        Stats_Text.text = "" +Stats;
+        HP_Max = Vitalidad;
+        HP = Vitalidad;
+    }
+
+   
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("ExpStar"))
+        {
+            Exp += 10;
+
+            if (Exp >= Exp_Max)
+            {
+                Nivel++;
+                Exp_Max = Mathf.RoundToInt(Exp_Max * 1.3f);
+                Stats += 5;
+            }
+        }
+    }
+
+    public void Subir_Vit()
+    {
+        if (Stats > 0)
+        {
+            Vitalidad++;
+            Stats--;
+        }
+    }
+    public void Subir_Fuerza()
+    {
+        if (Stats > 0)
+        {
+            Fuerza++;
+            Stats--;
+        }
+    }
+    public void Subir_Def()
+    {
+        if (Stats > 0)
+        {
+            Defensa++;
+            Stats--;
+        }
+    }
+    public void Subir_Stamina()
+    {
+        if (Stats > 0)
+        {
+            Aguante++;
+            Stats--;
+        }
+    }
+  
+    public void Bajar_Vitalidad()
+    {
+        if (Vitalidad > 50)
+        {
+            Vitalidad--;
+            Stats++;
+        }
+    }
+    public void Bajar_Fuerza()
+    {
+        if (Fuerza > 15)
+        {
+            Fuerza--;
+            Stats++;
+        }
+    }
+
+    public void Bajar_Defensa()
+    {
+        if (Defensa > 5)
+        {
+            Defensa--;
+            Stats++;
+        }
+    }
+    public void Bajar_Stamina()
+    {
+        if (Aguante > 10)
+        {
+            Aguante--;
+            Stats++;
+        }
+    }
+    void Update()
+    {
+        Texto_Interfaz();
+    }
+
+    public void Exit()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private void OnDestroy()
+    {
+        SaveData();
+    }
+
+    private void SaveData()
+    {
+        
+        PlayerPrefs.SetInt(viTality, Vitalidad);
+        PlayerPrefs.SetInt(sTrength, Fuerza);
+        PlayerPrefs.SetInt(sHield, Defensa);
+        PlayerPrefs.SetInt(sTamina, Aguante);
+
+    }
+
+    private void LoadData()
+    {
+        Vitalidad = PlayerPrefs.GetInt(viTality, 0);
+        Fuerza = PlayerPrefs.GetInt(sTrength, 0);
+        Defensa = PlayerPrefs.GetInt(sHield, 0);
+        Aguante = PlayerPrefs.GetInt(sTamina, 0);
+
+
+    }
+}
